@@ -10,6 +10,7 @@ function createAccount (_, { description }, ctx, info) {
 
   //Recuera usuario
   const userId = getUserId(ctx)
+
   return ctx.db.mutation.createAccount({
     data: {
       description,
@@ -38,6 +39,34 @@ function createCategory (_, { description, operation }, ctx, info) {
           id: userId
         }
       }
+    }
+  }, info)
+
+}
+
+//CREATE RECORD
+function createRecord (_, args, ctx, info) {
+
+  //Recuera usuario
+  const userId = getUserId(ctx)
+  
+  return ctx.db.mutation.createRecord({
+    data: {
+      user: {
+        connect: { id: userId }
+      },
+      account: {
+        connect: { id: args.accountId }
+      },
+      category: {
+        connect: { id: args.categoryId }
+      },
+      amount: args.amount,
+      type: args.type,
+      date: args.date,
+      description: args.description,
+      tags: args.tags,
+      note: args.note
     }
   }, info)
 
@@ -88,6 +117,7 @@ async function signup (_, args, ctx, info) {
 module.exports = {
   createAccount,
   createCategory,
+  createRecord,
   login,
   signup
 }
