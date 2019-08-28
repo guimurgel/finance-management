@@ -23,6 +23,26 @@ function createAccount (_, { description }, ctx, info) {
 
 }
 
+//CREATE CATEGORY
+function createCategory (_, { description, operation }, ctx, info) {
+
+  //Recuera usuario
+  const userId = getUserId(ctx)
+
+  return ctx.db.mutation.createCategory({
+    data: {
+      description,
+      operation,
+      user: {
+        connect: {
+          id: userId
+        }
+      }
+    }
+  }, info)
+
+}
+
 //LOGIN
 async function login(_, { email, password }, ctx, info) {
 
@@ -67,6 +87,7 @@ async function signup (_, args, ctx, info) {
 
 module.exports = {
   createAccount,
+  createCategory,
   login,
   signup
 }
