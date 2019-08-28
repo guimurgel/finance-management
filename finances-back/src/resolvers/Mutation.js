@@ -1,7 +1,27 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { getUserId } = require('./../utils')
 
 const JWT_SECRET = process.env.JWT_SECRET
+
+
+//CREATE ACC
+function createAccount (_, { description }, ctx, info) {
+
+  //Recuera usuario
+  const userId = getUserId(ctx)
+  return ctx.db.mutation.createAccount({
+    data: {
+      description,
+      user: {
+        connect: {
+          id: userId
+        }
+      }
+    }
+  }, info)
+
+}
 
 //LOGIN
 async function login(_, { email, password }, ctx, info) {
@@ -46,6 +66,7 @@ async function signup (_, args, ctx, info) {
 }
 
 module.exports = {
+  createAccount,
   login,
   signup
 }
