@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET
 //LOGIN
 async function login(_, { email, password }, ctx, info) {
 
+  
   const user = await ctx.db.query.user( {where: { email} })
 
   //Verifica se tem usuario
