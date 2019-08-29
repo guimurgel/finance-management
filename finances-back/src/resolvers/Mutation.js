@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 const { getUserId } = require('./../utils')
 
 const JWT_SECRET = process.env.JWT_SECRET
@@ -46,6 +47,12 @@ function createCategory (_, { description, operation }, ctx, info) {
 
 //CREATE RECORD
 function createRecord (_, args, ctx, info) {
+
+  //Validacao data
+  const date = moment(args.date)
+  if (!date.isValid()){
+    throw new Error('Invalid date!')
+  }
 
   //Recuera usuario
   const userId = getUserId(ctx)
