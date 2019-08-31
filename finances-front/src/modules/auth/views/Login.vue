@@ -18,6 +18,13 @@
             dark
           >
             <v-toolbar-title>{{ texts.toolbar }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-progress-circular
+              v-show="isLoading"
+              indeterminate
+              color="white"
+              widht="2"
+            ></v-progress-circular>
           </v-toolbar>
 
           <v-card-text>
@@ -83,11 +90,13 @@
 
 import { required, email, minLength } from 'vuelidate/lib/validators'
 import AuthService from './../services/auth-service'
+import { setTimeout } from 'timers'
 
 export default {
   name: 'Login',
   data: () => ({
     isLogin: true,
+    isLoading: false,
     user: {
       name: '',
       email: '',
@@ -160,10 +169,18 @@ export default {
   },
   methods: {
     async submit () {
-      const authData = this.isLogin
-        ? await AuthService.login(this.user)
-        : await AuthService.signup(this.user)
-      console.log('AuthData: ', authData)
+      this.isLoading = true
+      try {
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        const authData = this.isLogin
+          ? await AuthService.login(this.user)
+          : await AuthService.signup(this.user)
+        console.log('AuthData: ', authData)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isLoading = false
+      }
     }
   }
 }
