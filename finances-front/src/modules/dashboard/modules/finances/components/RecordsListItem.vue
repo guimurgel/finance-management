@@ -13,9 +13,9 @@
     <!-- Content -->
     <v-list-item-content>
       <v-list-item-title>{{ record.description}}</v-list-item-title>
-      <v-list-item-sub-title>
+      <v-list-item-subtitle>
         {{record.category.description}} | {{record.account.description}}
-      </v-list-item-sub-title>
+      </v-list-item-subtitle>
     </v-list-item-content>
 
     <!-- Amount -->
@@ -29,7 +29,7 @@
 <script>
 export default {
   name: 'RecordsListItem',
-  prop: {
+  props: {
     record: Object
   },
   methods: {
@@ -52,3 +52,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.material-icons.error:before {
+  content: "";
+}
+</style>
