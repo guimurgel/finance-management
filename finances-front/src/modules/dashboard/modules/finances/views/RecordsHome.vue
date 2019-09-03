@@ -1,3 +1,3 @@
 <template>
-  <h1>lançamentos</h1>
+  <h1>Lançamentos</h1>
 </template>

@@ -2,7 +2,7 @@ const RecordsHome = () => import('./../views/RecordsHome.vue')
 
 export default [
   {
-    paht: 'records',
+    path: 'records',
     component: RecordsHome,
     meta: {
       requiresAuth: true
