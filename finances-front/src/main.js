@@ -4,6 +4,7 @@ import router from '@/router'
 import store from '@/store'
 import { errorHandler } from '@/utils'
 import vuetify from '@/plugins/vuetify'
+import '@/plugins/moment'
 import '@/plugins/vuelidate'
 
 Vue.config.productionTip = false
