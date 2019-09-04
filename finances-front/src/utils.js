@@ -15,12 +15,22 @@ const errorHandler = (err, vm, info) => {
   }
 }
 
+// Formatação de Erros
 const formatError = message => {
   const messageSplit = message.split(':')
   return messageSplit[messageSplit.length - 1].trim()
 }
 
+// Internacionalização de moedas
+const currencyFormatter = ({ locale, currency } = { locale: 'pt-BR', currency: 'BRL' }) => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+  })
+}
+
 export {
+  currencyFormatter,
   errorHandler,
   formatError
 }
