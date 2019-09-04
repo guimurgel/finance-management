@@ -8,7 +8,27 @@
     />
 
     <v-card>
+
+      <!-- Lista = 0 -->
+      <v-card-text
+        v-if="mappedRecordsLength === 0"
+        class="flex-center"
+      >
+        <v-icon
+          size="100"
+          color="grey"
+        >
+          assignment
+
+        </v-icon>
+        <p class="font-weight-light subheading grey--text">
+          Nenhum lançamento no período
+        </p>
+      </v-card-text>
+
+      <!-- Lista de Lançamentos -->
       <v-list
+        v-else
         two-line
         subheader
       >
@@ -75,6 +95,9 @@ export default {
         return moment(record[dateKey]).format('DD/MM/YYYY')
       })
     },
+    mappedRecordsLength () {
+      return Object.keys(this.mappedRecords).length
+    },
     totalAmount () {
       return this.records.reduce((sum, record) => sum + record.amount, 0)
     }
@@ -94,3 +117,11 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>
