@@ -1,0 +1,3 @@
+query Totalbalance ($date: Date!) {
+  totalBalance (date: $date)
+}
