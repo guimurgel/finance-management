@@ -1,5 +1,5 @@
 <template>
-  <v-list-item avatar>
+  <v-list-item>
 
     <!-- Icon -->
     <v-list-item-avatar>

@@ -19,10 +19,7 @@
       </v-list-item>
 
       <!-- Avatar -->
-      <v-list-item
-        avatar
-        tag="div"
-      >
+      <v-list-item tag="div">
         <!-- Icon -->
         <v-list-item-avatar>
           <v-icon>person</v-icon>

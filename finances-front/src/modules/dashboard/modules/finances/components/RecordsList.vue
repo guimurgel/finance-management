@@ -79,15 +79,17 @@ export default {
       return this.records.reduce((sum, record) => sum + record.amount, 0)
     }
   },
-  async created () {
-    this.records = await RecordsService.records()
-  },
   methods: {
+    changeMonth (month) {
+      this.setRecords(month)
+    },
+    async setRecords (month) {
+      this.records = await RecordsService.records({
+        month: month
+      })
+    },
     showDivider (index, object) {
       return index < Object.keys(object).length - 1
-    },
-    changeMonth (month) {
-      console.log('Month: ', month)
     }
   }
 }
