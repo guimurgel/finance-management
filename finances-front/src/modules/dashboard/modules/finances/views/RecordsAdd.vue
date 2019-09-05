@@ -26,6 +26,47 @@
           <v-card-text>
             <v-form>
 
+              <!-- Date -->
+              <v-dialog
+                ref="dateDialog"
+                :return-value.sync="record.date"
+                v-model="showDateDialog"
+                persistent
+                width="290px"
+                full-width
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    name="date"
+                    label="Vencimento"
+                    prepend-icon="event"
+                    type="text"
+                    readonly
+                    :value="formatedDate"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <!-- Date Picker -->
+                <v-date-picker
+                  :color="color"
+                  locale="pt-br"
+                  scrollable
+                  v-model="dateDialogValue"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    text
+                    :color="color"
+                    @click="cancelDateDialog"
+                  >Cancelar</v-btn>
+                  <v-btn
+                    text
+                    :color="color"
+                    @click="$refs.dateDialog.save(dateDialogValue)"
+                  >OK</v-btn>
+                </v-date-picker>
+              </v-dialog>
+
               <!-- Account -->
               <v-select
                 name="account"
@@ -54,7 +95,7 @@
                 label="Descrição"
                 prepend-icon="description"
                 type="text"
-                v-model="$v.record.description.$model"
+                v-model.trim="$v.record.description.$model"
               ></v-text-field>
 
               <!-- Tags -->
@@ -64,7 +105,7 @@
                 label="Tags (separadas por virgula)"
                 prepend-icon="label"
                 type="text"
-                v-model="record.tags"
+                v-model.trim="record.tags"
               ></v-text-field>
 
               <!-- Note -->
@@ -74,7 +115,7 @@
                 label="Observação"
                 prepend-icon="note"
                 type="text"
-                v-model="record.note"
+                v-model.trim="record.note"
               ></v-text-field>
 
             </v-form>
@@ -157,6 +198,7 @@ export default {
     return {
       accounts: [],
       categories: [],
+      dateDialogValue: moment().format('YYYY-MM-DD'),
       record: {
         type: this.$route.query.type.toUpperCase(),
         amount: 0,
@@ -167,6 +209,7 @@ export default {
         tags: '',
         note: ''
       },
+      showDateDialog: false,
       showTagsInput: false,
       showNoteInput: false
     }
@@ -191,6 +234,9 @@ export default {
         default:
           return 'primary'
       }
+    },
+    formatedDate () {
+      return moment(this.record.date).format('DD/MM/YYYY')
     }
   },
   async created () {
@@ -208,6 +254,10 @@ export default {
   },
   methods: {
     ...mapActions(['setTitle']),
+    cancelDateDialog () {
+      this.showDateDialog = false
+      this.dateDialogValue = this.record.date
+    },
     changeTitle (recordType) {
       let title
       switch (recordType) {
