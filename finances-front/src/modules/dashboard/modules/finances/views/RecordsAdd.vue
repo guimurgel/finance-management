@@ -59,6 +59,7 @@
 
               <!-- Tags -->
               <v-text-field
+                v-show="showTagsInput"
                 name="tags"
                 label="Tags (separadas por virgula)"
                 prepend-icon="label"
@@ -68,6 +69,7 @@
 
               <!-- Note -->
               <v-text-field
+                v-show="showNoteInput"
                 name="note"
                 label="Observação"
                 prepend-icon="note"
@@ -76,6 +78,39 @@
               ></v-text-field>
 
             </v-form>
+
+            <v-layout class="flex-center mt-4">
+              <v-tooltip left>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    smmal
+                    class="mr-3"
+                    v-on="on"
+                    @click="showTagsInput= !showTagsInput"
+                  >
+                    <v-icon :color="color">label</v-icon>
+                  </v-btn>
+                </template>
+                <span>Adicionar Tags</span>
+              </v-tooltip>
+
+              <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    smmal
+                    v-on="on"
+                    @click="showNoteInput= !showNoteInput"
+                  >
+                    <v-icon :color="color">note</v-icon>
+                  </v-btn>
+                </template>
+                <span>Observação</span>
+              </v-tooltip>
+
+            </v-layout>
+
           </v-card-text>
         </v-card>
 
@@ -131,7 +166,9 @@ export default {
         description: '',
         tags: '',
         note: ''
-      }
+      },
+      showTagsInput: false,
+      showNoteInput: false
     }
   },
   validations: {
