@@ -1,14 +1,14 @@
 # import * from './Operation.gql'
 
 mutation RecordCreate (
-    $type: Operation,
-    $amount: Float!,
-    $accountId: ID!,
-    $categoryId: ID!,
-    $date: Date!,
-    $description: String!,
-    $tags: String,
-    $note: String
+  $type: Operation!,
+  $amount: Float!,
+  $accountId: ID!,
+  $categoryId: ID!,
+  $date: Date!,
+  $description: String!,
+  $tags: String,
+  $note: String
 ) {
   createRecord (
     type: $type,
