@@ -105,7 +105,6 @@
 
 import { required, email, minLength } from 'vuelidate/lib/validators'
 import AuthService from './../services/auth-service'
-import { setTimeout } from 'timers'
 import { formatError } from '@/utils'
 
 export default {
