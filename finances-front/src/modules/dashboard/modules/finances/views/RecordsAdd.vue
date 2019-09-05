@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container text-xs-center>
     <v-layout
       row
       wrap
@@ -10,7 +10,6 @@
         sm6
         md4
         lg4
-        class="flex-center"
       >
         <p>Amount</p>
       </v-flex>
@@ -20,10 +19,55 @@
         sm6
         md8
         lg8
-        class="flex-center"
       >
-        <p>Formulário</p>
-        <v-btn @click="log">Log</v-btn>
+
+        <!-- Formulario -->
+        <v-card>
+          <v-card-text>
+            <v-form>
+
+              <!-- Account -->
+              <v-select
+                name="account"
+                label="Conta"
+                prepend-icon="account_balance"
+              ></v-select>
+
+              <!-- Category -->
+              <v-select
+                name="category"
+                label="Categoria"
+                prepend-icon="class"
+              ></v-select>
+
+              <!-- Description -->
+              <v-text-field
+                name="description"
+                label="Descrição"
+                prepend-icon="description"
+                type="text"
+              ></v-text-field>
+
+              <!-- Tags -->
+              <v-text-field
+                name="tags"
+                label="Tags (separadas por virgula)"
+                prepend-icon="label"
+                type="text"
+              ></v-text-field>
+
+              <!-- Note -->
+              <v-text-field
+                name="note"
+                label="Observação"
+                prepend-icon="note"
+                type="text"
+              ></v-text-field>
+
+            </v-form>
+          </v-card-text>
+        </v-card>
+
       </v-flex>
 
     </v-layout>
