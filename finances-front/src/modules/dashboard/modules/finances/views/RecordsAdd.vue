@@ -11,7 +11,9 @@
         md4
         lg4
       >
-        <p>Amount</p>
+
+        <NumericDisplay :color="color" />
+
       </v-flex>
 
       <v-flex
@@ -191,9 +193,13 @@ import { mapActions } from 'vuex'
 
 import AccountsService from './../services/accounts-service'
 import CategoriesService from './../services/categories-service'
+import NumericDisplay from './../components/NumericDisplay.vue'
 
 export default {
   name: 'RecordsAdd',
+  components: {
+    NumericDisplay
+  },
   data () {
     return {
       accounts: [],
