@@ -31,6 +31,10 @@
                 name="account"
                 label="Conta"
                 prepend-icon="account_balance"
+                :items="accounts"
+                item-text="description"
+                item-value="id"
+                v-model="record.accountId"
               ></v-select>
 
               <!-- Category -->
@@ -38,6 +42,10 @@
                 name="category"
                 label="Categoria"
                 prepend-icon="class"
+                :items="categories"
+                item-text="description"
+                item-value="id"
+                v-model="record.categoryId"
               ></v-select>
 
               <!-- Description -->
@@ -68,6 +76,11 @@
           </v-card-text>
         </v-card>
 
+        <v-btn
+          color="primary"
+          @click="log"
+        >Log</v-btn>
+
       </v-flex>
 
     </v-layout>
@@ -80,10 +93,15 @@ import moment from 'moment'
 import { decimal, minLength, required } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
 
+import AccountsService from './../services/accounts-service'
+import CategoriesService from './../services/categories-service'
+
 export default {
   name: 'RecordsAdd',
   data () {
     return {
+      accounts: [],
+      categories: [],
       record: {
         type: this.$route.query.type.toUpperCase(),
         amount: 0,
@@ -106,13 +124,17 @@ export default {
       description: { required, minLength: minLength(6) }
     }
   },
-  created () {
+  async created () {
     this.changeTitle(this.$route.query.type)
+    this.accounts = await AccountsService.accounts()
+    this.categories = await CategoriesService.categories({ operation: this.$route.query.type })
   },
-  beforeRouteUpdate (to, from, next) {
+  async beforeRouteUpdate (to, from, next) {
     const { type } = to.query
     this.changeTitle(type)
     this.record.type = type.toUpperCase()
+    this.categories = await CategoriesService.categories({ operation: type })
+
     next()
   },
   methods: {
