@@ -54,6 +54,15 @@ function createRecord (_, args, ctx, info) {
     throw new Error('Invalid date!')
   }
 
+  //Verifica o valor e add o sinal correto
+  let { amount, type } = args
+  if (
+    (type === 'DEBIT' && amount > 0) ||
+    (type === 'CREDIT' && amount < 0)
+  ) {
+    amount = -amount
+  }
+
   //Recuera usuario
   const userId = getUserId(ctx)
   
@@ -68,7 +77,7 @@ function createRecord (_, args, ctx, info) {
       category: {
         connect: { id: args.categoryId }
       },
-      amount: args.amount,
+      amount: amount,
       type: args.type,
       date: args.date,
       description: args.description,
