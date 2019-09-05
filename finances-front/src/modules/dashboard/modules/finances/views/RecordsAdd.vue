@@ -1,5 +1,32 @@
 <template>
-  <h1>Novo Lançamento</h1>
+  <v-container>
+    <v-layout
+      row
+      wrap
+    >
+
+      <v-flex
+        xs12
+        sm6
+        md4
+        lg4
+        class="flex-center"
+      >
+        <p>Amount</p>
+      </v-flex>
+
+      <v-flex
+        xs12
+        sm6
+        md8
+        lg8
+        class="flex-center"
+      >
+        <p>Formulário</p>
+      </v-flex>
+
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -36,3 +63,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
