@@ -34,7 +34,7 @@
                 :items="accounts"
                 item-text="description"
                 item-value="id"
-                v-model="record.accountId"
+                v-model="$v.record.accountId.$model"
               ></v-select>
 
               <!-- Category -->
@@ -45,7 +45,7 @@
                 :items="categories"
                 item-text="description"
                 item-value="id"
-                v-model="record.categoryId"
+                v-model="$v.record.categoryId.$model"
               ></v-select>
 
               <!-- Description -->
@@ -54,6 +54,7 @@
                 label="Descrição"
                 prepend-icon="description"
                 type="text"
+                v-model="$v.record.description.$model"
               ></v-text-field>
 
               <!-- Tags -->
@@ -62,6 +63,7 @@
                 label="Tags (separadas por virgula)"
                 prepend-icon="label"
                 type="text"
+                v-model="record.tags"
               ></v-text-field>
 
               <!-- Note -->
@@ -70,16 +72,34 @@
                 label="Observação"
                 prepend-icon="note"
                 type="text"
+                v-model="record.note"
               ></v-text-field>
 
             </v-form>
           </v-card-text>
         </v-card>
 
-        <v-btn
-          color="primary"
-          @click="log"
-        >Log</v-btn>
+        <v-layout class="flex-center mt-4">
+          <!-- BTN - Cancelar -->
+          <v-btn
+            color="secondary"
+            large
+            fab
+            @click="$router.back()"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+
+          <!-- BTN - Enviar -->
+          <v-btn
+            :color="color"
+            large
+            fab
+            @click="submit"
+          >
+            <v-icon>check</v-icon>
+          </v-btn>
+        </v-layout>
 
       </v-flex>
 
@@ -124,6 +144,18 @@ export default {
       description: { required, minLength: minLength(6) }
     }
   },
+  computed: {
+    color () {
+      switch (this.record.type) {
+        case 'CREDIT':
+          return 'primary'
+        case 'DEBIT':
+          return 'error'
+        default:
+          return 'primary'
+      }
+    }
+  },
   async created () {
     this.changeTitle(this.$route.query.type)
     this.accounts = await AccountsService.accounts()
@@ -155,7 +187,7 @@ export default {
 
       this.setTitle({ title })
     },
-    log () {
+    submit () {
       console.log('Form: ', this.record)
     }
   }
@@ -165,8 +197,12 @@ export default {
 <style lang="scss" scoped>
 .flex-center {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+
+  button {
+    margin: 0 10px;
+  }
 }
 </style>
