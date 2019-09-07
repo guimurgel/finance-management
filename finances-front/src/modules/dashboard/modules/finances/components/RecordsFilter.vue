@@ -37,20 +37,116 @@
             <v-icon>check</v-icon>
           </v-btn>
         </v-card-title>
+
+        <v-card-text>
+          <v-list three-line>
+
+            <!-- Lançamento -->
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Tipo de Laçamento
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-select
+                    placeholder="Todos os lançamentos"
+                    chips
+                    deletable-chips
+                    :items="operations"
+                    item-text="description"
+                    item-value="value"
+                  >
+                  </v-select>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+            <!-- Conta -->
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Conta
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-select
+                    placeholder="Todas as contas"
+                    chips
+                    deletable-chips
+                    multiple
+                    :items="accounts"
+                    item-text="description"
+                    item-value="id"
+                  >
+                  </v-select>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+            <!-- Categoria -->
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Categoria
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-select
+                    placeholder="Todas as categorias"
+                    chips
+                    deletable-chips
+                    multiple
+                    :items="categories"
+                    item-text="description"
+                    item-value="id"
+                  >
+                  </v-select>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+          </v-list>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
+
+import AccountsService from './../services/accounts-service'
+import CategoriesService from './../services/categories-service'
+
 export default {
   name: 'RecordsFilter',
   data: () => ({
-    showFilterDialog: false
+    accounts: [],
+    categories: [],
+    operations: [
+      { description: 'Receita', value: 'CREDIT' },
+      { description: 'Despesa', value: 'DEBIT' }
+    ],
+    showFilterDialog: false,
+    subscriptions: []
   }),
+  created () {
+    this.setItems()
+  },
+  destroyed () {
+    this.subscriptions.forEach(s => s.unsubscribe())
+  },
   methods: {
     filter (e) {
       console.log('Filters')
+    },
+    setItems () {
+      this.subscriptions.push(
+        AccountsService.accounts()
+          .subscribe(accounts => (this.accounts = accounts))
+      )
+
+      this.subscriptions.push(
+        CategoriesService.categories()
+          .subscribe(categories => (this.categories = categories))
+      )
     }
   }
 }
