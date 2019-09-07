@@ -23,6 +23,19 @@
       <v-card>
         <v-card-title>
           <h3 class="headline">Filtros</h3>
+          <v-spacer></v-spacer>
+          <v-btn
+            icon
+            @click="showFilterDialog = false"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            @click="filter"
+          >
+            <v-icon>check</v-icon>
+          </v-btn>
         </v-card-title>
       </v-card>
     </v-dialog>
@@ -34,6 +47,11 @@ export default {
   name: 'RecordsFilter',
   data: () => ({
     showFilterDialog: false
-  })
+  }),
+  methods: {
+    filter (e) {
+      console.log('Filters')
+    }
+  }
 }
 </script>
