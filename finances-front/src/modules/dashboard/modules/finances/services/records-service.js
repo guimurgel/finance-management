@@ -10,7 +10,31 @@ import TotalBalanceQuery from './../graphql/TotalBalance.gql'
 const createRecord = async variables => {
   const response = await apollo.mutate({
     mutation: RecordCreateMutation,
-    variables
+    variables,
+    update: (proxy, { data: { createRecord } }) => {
+      const month = moment(createRecord.date).format('MM-YYYY')
+      const variables = { month }
+
+      try {
+        // Leitura da query
+        const recordsData = proxy.readQuery({
+          query: RecordsQuery,
+          variables
+        })
+
+        // Inserindo nova record
+        recordsData.records = [...recordsData.records, createRecord]
+
+        // Reescrevendo a query com os novos parametro
+        proxy.writeQuery({
+          query: RecordsQuery,
+          variables,
+          data: recordsData
+        })
+      } catch (e) {
+        console.log('Query "Records" has not been read yet!', e)
+      }
+    }
   })
 
   return response.data.createRecord

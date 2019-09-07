@@ -127,8 +127,6 @@ export default {
       this.monthSubject$.next({ month })
     },
     setRecords (month) {
-      console.log('Subscribing...')
-
       this.monthSubject$
         .pipe(
           mergeMap((variables) => RecordsService.records(variables))
