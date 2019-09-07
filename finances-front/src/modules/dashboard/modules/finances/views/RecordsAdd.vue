@@ -241,6 +241,8 @@
 import moment from 'moment'
 import { decimal, minLength, required } from 'vuelidate/lib/validators'
 import { mapActions } from 'vuex'
+import { Subject } from 'rxjs'
+import { distinctUntilChanged, mergeMap } from 'rxjs/operators'
 
 import AccountCategoryAdd from './../components/AccountCategoryAdd.vue'
 import AccountsService from './../services/accounts-service'
@@ -260,6 +262,7 @@ export default {
       categories: [],
       dateDialogValue: moment().format('YYYY-MM-DD'),
       entity: '',
+      operationSubject$: new Subject(),
       record: {
         type: this.$route.query.type.toUpperCase(),
         amount: 0,
@@ -303,15 +306,25 @@ export default {
   },
   async created () {
     this.changeTitle(this.$route.query.type)
-    this.accounts = await AccountsService.accounts()
-    this.categories = await CategoriesService.categories({ operation: this.$route.query.type })
+
+    //
+    AccountsService.accounts()
+      .subscribe(accounts => (this.accounts = accounts))
+
+    //
+    this.operationSubject$
+      .pipe(
+        distinctUntilChanged(),
+        mergeMap(operation => CategoriesService.categories({ operation }))
+      ).subscribe(categories => (this.categories = categories))
+    this.operationSubject$.next(this.$route.query.type)
   },
   async beforeRouteUpdate (to, from, next) {
     const { type } = to.query
     this.changeTitle(type)
     this.record.type = type.toUpperCase()
     this.record.categoryId = ''
-    this.categories = await CategoriesService.categories({ operation: type })
+    this.operationSubject$.next(type)
 
     next()
   },
