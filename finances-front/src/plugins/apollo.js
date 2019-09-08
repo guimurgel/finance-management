@@ -5,9 +5,9 @@ const AUTH_TOKEN = 'apollo-token'
 // Reseta o cache do Apollo Client
 const resetApolloClient = async apollo => {
   try {
-    await apollo.resetStore
+    await apollo.resetStore()
   } catch (e) {
-    console.log('%cError on cache reset', 'color: orange', Error.message)
+    console.log('%cError on cache reset', 'color: orange;', e.message)
   }
 }
 
@@ -15,6 +15,13 @@ const resetApolloClient = async apollo => {
 const onLogin = async (apollo, token) => {
   if (typeof window.localStorage !== 'undefined' && token) {
     window.localStorage.setItem(AUTH_TOKEN, token)
+  }
+  await resetApolloClient(apollo)
+}
+
+const onLogout = async apollo => {
+  if (typeof window.localStorage !== 'undefined') {
+    window.localStorage.removeItem(AUTH_TOKEN)
   }
   await resetApolloClient(apollo)
 }
@@ -45,7 +52,9 @@ const apollo = new ApolloClient({
 })
 
 export default apollo
+
 export {
   AUTH_TOKEN,
-  onLogin
+  onLogin,
+  onLogout
 }
