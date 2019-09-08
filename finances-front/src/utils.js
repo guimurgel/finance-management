@@ -35,6 +35,17 @@ const groupBy = (array, key, makeCurrentKey) => {
   }, {})
 }
 
+const idx = (object, keyPath) => { // record.category.user.name
+  const keys = keyPath.split('.') // ['record','category','user','name']
+  return keys.reduce(
+    (obj, current) => (
+      obj && obj[current] !== undefined
+        ? obj[current]
+        : null
+    ), object
+  )
+}
+
 // Internacionalização de moedas
 const currencyFormatter = ({ locale, currency } = { locale: 'pt-BR', currency: 'BRL' }) => {
   return new Intl.NumberFormat(locale, {
