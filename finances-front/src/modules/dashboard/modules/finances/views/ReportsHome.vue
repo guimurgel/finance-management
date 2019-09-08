@@ -43,6 +43,7 @@ import { mapActions, mapState } from 'vuex'
 import { Subject } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 
+import { generateChartConfigs } from '@/utils'
 import RecordsService from './../services/records-service'
 import ToolbarByMonth from './../components/ToolbarByMonth.vue'
 
@@ -52,6 +53,7 @@ export default {
     ToolbarByMonth
   },
   data: () => ({
+    charIncomesExpenses: undefined,
     charts: [
       { title: 'Receitas vs Despesas', refId: 'chartIncomesExpenses' },
       { title: 'Despesas por categoria', refId: 'chartCategoryExpenses' }
@@ -81,38 +83,34 @@ export default {
       this.setMonth({ month })
       this.monthSubject$.next(month)
     },
+    createChart (chartId, options) {
+      const ref = Array.isArray(this.$refs[chartId])
+        ? this.$refs[chartId][0]
+        : this.$refs[chartId]
+
+      const ctx = ref.getContext('2d')
+      return new Chart(ctx, options)
+    },
     setCharts () {
-      const ctx = this.$refs.chartIncomesExpenses[0].getContext('2d')
-      const myChart = new Chart(ctx, {
+      const chartIncomesExpensesConfigs = generateChartConfigs({
         type: 'bar',
-        data: {
-          datasets: [
-            {
-              data: [500],
-              label: 'Receitas',
-              backgroundColor: [
-                this.$vuetify.theme.themes.dark.primary
-              ]
-            },
-            {
-              data: [350],
-              label: 'Despesas',
-              backgroundColor: [
-                this.$vuetify.theme.themes.dark.error
-              ]
-            }
-          ]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
+        items: this.records,
+        keyToGroup: 'type',
+        keyOfValue: 'amount',
+        aliases: { CREDIT: 'Receitas', DEBIT: 'Despesas' },
+        backgroundColors: [
+          this.$vuetify.theme.themes.dark.error,
+          this.$vuetify.theme.themes.dark.primary
+        ]
       })
+
+      if (this.chartIncomesExpenses) {
+        this.chartIncomesExpenses.data.datasets = chartIncomesExpensesConfigs.data.datasets
+        this.chartIncomesExpenses.update()
+      } else {
+        this.chartIncomesExpenses =
+          this.createChart('chartIncomesExpenses', chartIncomesExpensesConfigs)
+      }
     },
     setRecords () {
       this.subscriptions.push(

@@ -66,9 +66,7 @@ const generateChartData = ({ items, keyToGroup, keyOfValue, aliases, type, backg
 
   for (let key in grouped) {
     response[(aliases && aliases[key]) || key] =
-      grouped[key].reduce((acc, item) => {
-        return acc + item[keyOfValue]
-      }, 0)
+      grouped[key].reduce((acc, item) => acc + item[keyOfValue], 0)
   }
 
   const labels = Object.keys(response)
@@ -77,8 +75,8 @@ const generateChartData = ({ items, keyToGroup, keyOfValue, aliases, type, backg
     case 'bar':
       return {
         datasets: labels.map((label, index) => ({
-          lael: `${label}: ${currencyFormatter().format(response[label])}`,
-          data: [response[label]],
+          label: `${label}: ${currencyFormatter().format(response[label])}`,
+          data: [response[label] >= 0 ? response[label] : -response[label]],
           backgroundColor: backgroundColors[index],
           borderWidth: 0
         }))
