@@ -84,17 +84,28 @@ export default {
       this.setMonth({ month })
       this.monthSubject$.next(month)
     },
-    createChart (chartId, options) {
+    updateOrCreateChart (chartId, options) {
+      // Verifica se tem um grafico definido - UPDATE
+      if (this[chartId]) {
+        this[chartId].data.datasets = options.data.datasets
+        if (options.data.labels) {
+          this[chartId].data.datasets = options.data.labels
+        }
+        this[chartId].update()
+        return this[chartId]
+      }
+
+      // CREATE CHART
       const ref = Array.isArray(this.$refs[chartId])
         ? this.$refs[chartId][0]
         : this.$refs[chartId]
 
       const ctx = ref.getContext('2d')
-      return new Chart(ctx, options)
+      this[chartId] = new Chart(ctx, options)
+      return this[chartId]
     },
     setCharts () {
-      // Receitas e Despesas
-      const chartIncomesExpensesConfigs = generateChartConfigs({
+      this.updateOrCreateChart('chartIncomesExpenses', generateChartConfigs({
         type: 'bar',
         items: this.records,
         keyToGroup: 'type',
@@ -104,18 +115,9 @@ export default {
           this.$vuetify.theme.themes.dark.error,
           this.$vuetify.theme.themes.dark.primary
         ]
-      })
+      }))
 
-      if (this.chartIncomesExpenses) {
-        this.chartIncomesExpenses.data.datasets = chartIncomesExpensesConfigs.data.datasets
-        this.chartIncomesExpenses.update()
-      } else {
-        this.chartIncomesExpenses =
-          this.createChart('chartIncomesExpenses', chartIncomesExpensesConfigs)
-      }
-
-      // Despesas por Categoria
-      const chartCategoryExpensesConfigs = generateChartConfigs({
+      this.updateOrCreateChart('chartCategoryExpenses', generateChartConfigs({
         type: 'doughnut',
         items: this.records.filter(r => r.type === 'DEBIT'),
         keyToGroup: 'category.description',
@@ -126,16 +128,7 @@ export default {
           this.$vuetify.theme.themes.dark.info,
           this.$vuetify.theme.themes.dark.success
         ]
-      })
-
-      if (this.chartCategoryExpenses) {
-        this.chartCategoryExpenses.data.datasets = chartCategoryExpensesConfigs.data.datasets
-        this.chartCategoryExpenses.data.datasets = chartCategoryExpensesConfigs.data.labels
-        this.chartCategoryExpenses.update()
-      } else {
-        this.chartCategoryExpenses =
-          this.createChart('chartCategoryExpenses', chartCategoryExpensesConfigs)
-      }
+      }))
     },
     setRecords () {
       this.subscriptions.push(
