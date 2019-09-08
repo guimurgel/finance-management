@@ -95,6 +95,12 @@ export default {
         icon: 'remove',
         url: '/dashboard/records/add?type=debit',
         exact: true
+      },
+      {
+        title: 'Relatórios',
+        icon: 'assessment',
+        url: '/dashboard/reports',
+        exact: true
       }
     ],
     mini: false,
