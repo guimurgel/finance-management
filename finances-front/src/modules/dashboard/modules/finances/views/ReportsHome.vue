@@ -7,9 +7,9 @@
     <v-flex xs12>
       <ToolbarByMonth
         format="MM-YYYY"
-        color="primary"
         :month="month || $route.query.month"
         @month="changeMonth"
+        :color="color"
       />
     </v-flex>
 
@@ -64,7 +64,15 @@ export default {
     subscriptions: []
   }),
   computed: {
-    ...mapState('finances', ['month'])
+    ...mapState('finances', ['month']),
+    recordsSun () {
+      return this.records.reduce((acc, record) => acc + record.amount, 0)
+    },
+    color () {
+      return this.recordsSun < 0
+        ? 'error'
+        : 'primary'
+    }
   },
   created () {
     this.setTitle({ title: 'Relatórios' })
@@ -121,13 +129,7 @@ export default {
         type: 'doughnut',
         items: this.records.filter(r => r.type === 'DEBIT'),
         keyToGroup: 'category.description',
-        keyOfValue: 'amount',
-        backgroundColors: [
-          this.$vuetify.theme.themes.dark.accent,
-          this.$vuetify.theme.themes.dark.warning,
-          this.$vuetify.theme.themes.dark.info,
-          this.$vuetify.theme.themes.dark.success
-        ]
+        keyOfValue: 'amount'
       }))
     },
     setRecords () {
