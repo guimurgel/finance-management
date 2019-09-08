@@ -47,7 +47,7 @@ const idx = (object, keyPath) => { // record.category.user.name
 }
 
 const generateChartOptions = (type) => {
-  let tooltips
+  let tooltips = {}
 
   switch (type) {
     case 'bar':
